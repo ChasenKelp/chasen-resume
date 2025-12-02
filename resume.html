@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紫菜森的简历</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. Dracula 变量和全局重置 (保持不变) --- */
+        :root {
+            --bg: #282a36;
+            --current-line: #44475a;
+            --bglight:#454c6c;
+            --fg: #f8f8f2;
+            --purple: #bd93f9;
+            --cyan: #8be9fd;
+            --green: #50fa7b;
+            --pink: #ff79c6;
+            --red: #ff5555;
+            --yellow:#f1fa8c;
+            /* 优先使用 Fira Code 作为等宽字体，后备加入常见中文界面字体以增强中文显示重量感 */
+            --font-stack: 'Fira Code', 'PingFang SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', 'Noto Sans SC', 'Menlo', 'Consolas', sans-serif;
+            --max-width: 900px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: var(--font-stack);
+            font-weight: 600; /* 将正文字体调粗，让中文看起来更有份量 */
+            line-height: 1.6;
+            padding: 20px;
+            padding-top: 40px; 
+            position: relative;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0px auto;
+            padding: 30px;
+            background-color: var(--current-line);
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        /* --- 2. 语言切换下拉框样式 --- */
+        .lang-select {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            /* 样式化 Select 元素，使其更符合 Dracula 风格 */
+            background-color: var(--purple);
+            color: var(--bg);
+            border: 2px solid var(--pink);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-stack);
+            font-weight: 700;
+            appearance: none; /* 移除默认的系统样式 */
+            z-index: 10;
+        }
+        
+        .lang-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(189, 147, 249, 0.5); /* 焦点效果 */
+        }
+
+        
+        /* 保持其他样式不变... */
+        .header {
+            text-align: center;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--pink);
+        }
+
+        .header h1 {
+            color: var(--fg);
+            font-size: 2.8em;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .header h2 {
+            color: var(--cyan);
+            font-size: 1.4em;
+            font-weight: 400;
+        }
+
+        /* 头像圆形容器（居中、圆角，不影响现有内容） */
+        .avatar {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--pink);
+            background: linear-gradient(135deg, rgba(189,147,249,0.06), rgba(139,233,253,0.03));
+            display: inline-block;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        .contact-info a {
+            color: var(--fg);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: color 0.3s;
+        }
+
+        .contact-info a:hover {
+            color: var(--purple);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h3 {
+            color: var(--cyan);
+            font-size: 1.6em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-left: 6px solid var(--purple);
+            padding-left: 12px;
+            line-height: 1;
+        }
+        
+        .section p {
+            padding-left: 18px;
+        }
+
+        .entry {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 3px solid var(--pink);
+            background-color: rgba(68, 71, 90, 0.3);
+            border-radius: 4px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .title-group {
+            flex-grow: 1;
+            padding-right: 15px;
+        }
+        
+        .title {
+            color: var(--yellow);
+            font-weight: 700;
+            font-size: 1.1em;
+            display: block;
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: var(--fg);
+            opacity: 0.7;
+            font-size: 0.95em;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .date {
+            color: var(--green);
+            font-size: 0.9em;
+            font-weight: 700;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .entry ul {
+            list-style-type: '🎈️ ';
+            margin-left: 20px;
+            padding-left: 5px;
+            font-size: 0.95em;
+        }
+
+        .entry li {
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-left: 18px;
+        }
+
+        .skill-tag {
+            background-color: var(--purple);
+            color: var(--bg);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background-color 0.3s, color 0.3s;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            background-color: var(--cyan);
+            color: var(--bg);
+        }
+
+        .skill-tag.primary {
+            background-color: var(--green);
+        }
+        
+        .skill-tag.primary:hover {
+            background-color: var(--pink);
+        }
+
+        /* 工作经验：纯色卡片，使用 --bglight 背景，不要阴影或其它效果 */
+        #experience .entry {
+            background-color: var(--bglight);
+            color: var(--fg);
+            border-left: none;
+            padding: 18px;
+            border-radius: 8px;
+            box-shadow: none;
+            margin-bottom: 18px;
+        }
+
+        /* 教育背景：纯色卡片，使用 --bglight 背景，不要阴影或其它效果 */
+        #education .entry {
+            background-color: var(--bglight);
+            color: var(--fg);
+            border-left: none;
+            padding: 18px;
+            border-radius: 8px;
+            box-shadow: none;
+            margin-bottom: 18px;
+        }
+
+        /* --- 个人介绍三栏与气泡样式 (Dracula 风格) --- */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 12px;
+            padding-left: 18px;
+        }
+
+        .intro-column h4 {
+            color: var(--yellow);
+            font-size: 1.05em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .bubbles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* 使个人介绍气泡与技术栈的 .skill-tag 风格一致 */
+        .bubble {
+            background-color: var(--purple);
+            color: var(--bg);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            font-weight: 700;
+            display: inline-block;
+            transition: background-color 0.18s;
+            cursor: default;
+            white-space: nowrap;
+        }
+
+        /* 仅保留颜色变化，移除阴影与位移 */
+        .bubble:hover {
+            background-color: var(--cyan);
+            color: var(--bg);
+        }
+
+        .bubble.primary {
+            background-color: var(--green);
+            color: var(--bg);
+        }
+
+        .bubble.primary:hover {
+            background-color: var(--pink);
+            color: var(--bg);
+        }
+
+        @media (max-width: 800px) {
+            .intro-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            .intro-grid { grid-template-columns: 1fr; }
+            .intro-column h4 { text-align: left; }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: var(--fg);
+            opacity: 0.5;
+        }
+
+        /* --- 7. 响应式设计 (RWD) --- */
+        @media (max-width: 600px) {
+            .lang-select {
+                position: static;
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .container {
+                padding: 15px;
+                margin-top: 0;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .header h2 {
+                font-size: 1.1em;
+            }
+            .contact-info a {
+                display: block;
+                margin: 5px 0;
+            }
+            .entry-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .date {
+                text-align: left;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <select id="lang-select" class="lang-select">
+        <option value="cn">中文</option>
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+    </select>
+
+    <div class="container">
+        <header class="header">
+            <div class="avatar" aria-hidden="true">
+                <img src="C4.png" alt="头像">
+            </div>
+            <h1 data-en="Chasen Kelp" data-fr="Chasen Kelp">紫菜森 / Chasen Kelp</h1>
+            <h2 data-en="System Software Development Engineer" data-fr="Ingénieur en Développement de Logiciels Système">系统软件开发工程师</h2>
+            <div class="contact-info">
+                <a href="mailto:caisen989@gmail.com">✉️ caisen989@gmail.com</a>
+                <a href="tel:+8618310071629">📞 (+86) 183-1007-1629</a>
+                <a href="https://github.com/ChasenKelp" target="_blank">🐙 GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">🔗 LinkedIn</a>
+            </div>
+        </header>
+
+        <main>
+            <section class="section" id="summary">
+                <h3 data-en="PERSONAL SUMMARY" data-fr="RÉSUMÉ PERSONNEL">个人概述</h3>
+                <div class="intro-grid">
+                    <div class="intro-column">
+                        <h4 data-en="INTERESTS" data-fr="DOMAINE D'INTÉRÊT">兴趣领域</h4>
+                        <div class="bubbles">
+                            <span class="bubble primary" data-en="Programming Languages" data-fr="Langages de Programmation">编程语言</span>
+                            <span class="bubble primary" data-en="Static Analysis" data-fr="Analyse Statique de Programme">静态程序分析</span>
+                            <span class="bubble" data-en="Compiler Development" data-fr="Développement de Compilateur">编译器开发</span>
+                            <span class="bubble" data-en="Performance Optimization" data-fr="Optimisation des Performances">性能优化</span>
+                            <span class="bubble" data-en="System Design" data-fr="Conception de Systèmes">系统设计</span>
+                        </div>
+                    </div>
+
+                    <div class="intro-column">
+                        <h4 data-en="PERSONAL HOBBIES" data-fr="LOISIRS PERSONNELS">生活爱好</h4>
+                        <div class="bubbles">
+                            <span class="bubble primary" data-en="Drawing" data-fr="Dessin">绘画</span>
+                            <span class="bubble primary" data-en="Horror Movies" data-fr="Films d'Horreur">恐怖片</span>
+                            <span class="bubble" data-en="Reading" data-fr="Lecture">阅读</span>
+                            <span class="bubble" data-en="Cardio Exercise" data-fr="Exercice Cardio">有氧运动</span>
+                            <span class="bubble" data-en="Blogging" data-fr="Bloguer">写博客</span>
+                        </div>
+                    </div>
+
+                    <div class="intro-column">
+                        <h4 data-en="FAVORITE GAMES" data-fr="JEUX PRÉFÉRÉS">喜爱游戏</h4>
+                        <div class="bubbles">
+                            <span class="bubble primary" data-en="Death Stranding" data-fr="Death Stranding">死亡搁浅</span>
+                            <span class="bubble primary" data-en="Dead by Daylight" data-fr="Dead by Daylight">黎明杀机</span>
+                            <span class="bubble" data-en="Hades" data-fr="Hadès">黑帝斯</span>
+                            <span class="bubble" data-en="Arknights" data-fr="Arknights">明日方舟</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="experience">
+                <h3 data-en="WORK EXPERIENCE" data-fr="EXPÉRIENCE PROFESSIONNELLE">工作经验</h3>
+                
+                <div class="entry">
+                    <div class="entry-header">
+                        <div class="title-group">
+                            <span class="title" data-en="Camera Software Engineer (Intern)" data-fr="Ingénieur Logiciel Caméra (Stagiaire)">影像软件工程师(实习)</span>
+                            <span class="subtitle" data-en="Beijing Honor Terminal Co., Ltd." data-fr="Beijing Honor Terminal Co., Ltd.">北京荣耀终端有限公司</span>
+                        </div>
+                        <span class="date">2025.05 – 2025.09</span>
+                    </div>
+                    <ul data-cn="
+                        <li> 参与安卓手机影像软件人像功能的 HAL 层开发与维护。 </li>
+                        <li> 在 Linux 环境下使用 C++ 开发。 </li>
+                        <li> 参与算法通路、内存泄漏、崩库调试等开发工作。 </li>
+                    " data-en="
+                        <li> Participated in the development and maintenance of the HAL layer for portrait functionality in Android mobile imaging software. </li>
+                        <li> Developed using C++ in a Linux environment. </li>
+                        <li> Involved in development tasks such as algorithm pipeline, memory leak, and library crash debugging. </li>
+                    " data-fr="
+                        <li> Participation au développement et à la maintenance de la couche HAL pour la fonctionnalité portrait dans le logiciel d'imagerie mobile Android. </li>
+                        <li> Développement en C++ dans un environnement Linux. </li>
+                        <li> Implication dans le développement (pipeline d'algorithmes, fuites de mémoire, débogage de plantages de bibliothèque). </li>
+                    ">
+                        <li> 参与安卓手机影像软件人像功能的 HAL 层开发与维护。 </li>
+                        <li> 在 Linux 环境下使用 C++ 开发。 </li>
+                        <li> 参与算法通路、内存泄漏、崩库调试等开发工作。 </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section" id="skills">
+                <h3 data-en="TECHNICAL SKILLS" data-fr="COMPÉTENCES TECHNIQUES">技术栈</h3>
+                <div class="skills-list">
+                    <span class="skill-tag primary">C++</span>
+                    <span class="skill-tag primary">Linux</span>
+                    <span class="skill-tag primary">Camera HAL</span>
+                    <span class="skill-tag primary">Git</span>
+                    <span class="skill-tag">Android</span>
+                    <span class="skill-tag">OCaml</span>
+                    <span class="skill-tag">Golang</span>
+                    <span class="skill-tag">Java</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">Docker</span>
+                </div>
+            </section>
+            
+            <section class="section" id="education">
+                <h3 data-en="EDUCATION" data-fr="ÉDUCATION">教育背景</h3>
+                <div class="entry">
+                    <div class="entry-header">
+                        <div class="title-group">
+                            <span class="title" data-en="Bachelor of Software Engineering" data-fr="Licence en Génie Logiciel">软件工程学士</span>
+                            <span class="subtitle" data-en="Chongqing University (985 Project)" data-fr="Université de Chongqing (Projet 985)">重庆大学(985)</span>
+                        </div>
+                        <span class="date">2022.09 – 2026.06</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p data-en="Code is Poetry. Designed with Dracula Theme. © 2025" data-fr="Le code est poésie. Conçu avec le thème Dracula. © 2025">Code is Poetry. Designed with Dracula Theme. © 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const langSelect = document.getElementById('lang-select');
+            
+            // 默认语言为 'cn'，这是 HTML 初始内容显示的语言
+            const defaultLang = 'cn'; 
+            
+            // 找到所有需要翻译的元素 (带有 data-en 或 data-fr 属性的元素)
+            const elementsToTranslate = document.querySelectorAll('[data-en], [data-fr]');
+
+            const switchLanguage = (targetLang) => {
+                // 设置页面语言属性
+                document.documentElement.lang = targetLang;
+
+                elementsToTranslate.forEach(element => {
+                    // 1. 确保将中文内容保存到 data-cn 属性
+                    // 首次运行时，将元素的 textContent 或 innerHTML (对于 UL) 存为中文原始内容
+                    if (!element.hasAttribute('data-cn')) {
+                        if (element.tagName === 'UL') {
+                             // UL 内容已在 data-cn 属性中定义
+                        } else {
+                            // 文本内容：保存初始中文文本
+                            element.setAttribute('data-cn', element.textContent);
+                        }
+                    }
+
+                    // 2. 根据目标语言进行内容切换
+                    
+                    // 目标内容属性名，例如 'data-en', 'data-fr'
+                    const targetAttr = `data-${targetLang}`;
+                    
+                    if (targetLang === defaultLang) {
+                        // 切换到中文：从 data-cn 恢复内容
+                        const cnContent = element.getAttribute('data-cn');
+                        if (cnContent) {
+                            if (element.tagName === 'UL') {
+                                element.innerHTML = element.getAttribute('data-cn').trim();
+                            } else {
+                                element.textContent = cnContent;
+                            }
+                        }
+                    } else {
+                        // 切换到目标语言（英/法）：从对应属性获取内容
+                        const targetContent = element.getAttribute(targetAttr);
+                        
+                        if (targetContent) {
+                            if (element.tagName === 'UL') {
+                                element.innerHTML = targetContent.trim();
+                            } else {
+                                element.textContent = targetContent;
+                            }
+                        }
+                    }
+                });
+            };
+
+            // 监听下拉框变化事件
+            langSelect.addEventListener('change', (event) => {
+                switchLanguage(event.target.value);
+            });
+            
+            // 初始检查 URL hash
+            const initialLang = window.location.hash.substring(1); // 移除 #
+            if (['en', 'fr', 'cn'].includes(initialLang)) {
+                langSelect.value = initialLang;
+                switchLanguage(initialLang);
+            }
+        });
+    </script>
+</body>
+</html>
